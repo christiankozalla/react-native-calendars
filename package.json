@@ -6,7 +6,7 @@
   "description": "React Native Calendar Components",
   "scripts": {
     "build": "xcodebuild -project ios/CalendarsExample.xcodeproj build",
-    "build:ts": "tsc",
+    "build:ts": "tsc --project ./tsconfig.json",
     "build:dev": "tsc --noEmit",
     "build:docs": "node ./scripts/build-docs.js",
     "e2e": "node ./scripts/test-e2e.js --release",
@@ -21,7 +21,8 @@
     "android": "react-native run-android",
     "xcode": "open ios/CalendarsExample.xcworkspace/",
     "clean": "rm yarn-lock && rm -rf ./node_modules && yarn",
-    "pod-install": "pod install --project-directory=ios"
+    "pod-install": "pod install --project-directory=ios",
+    "prepare": "npm run build:ts"
   },
   "repository": {
     "type": "git",

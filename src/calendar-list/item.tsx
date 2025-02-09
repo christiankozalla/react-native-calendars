@@ -48,10 +48,6 @@ const CalendarListItem = React.memo((props: CalendarListItemProps) => {
     ];
   }, [calendarWidth, calendarHeight, propsStyle]);
   
-  const textStyle = useMemo(() => {
-    return [calendarStyle, style.current.placeholderText];
-  }, [calendarStyle]);
-  
   const _onPressArrowLeft = useCallback((method: () => void, month?: XDate) => {
     const monthClone = month?.clone();
     if (monthClone) {
@@ -83,7 +79,7 @@ const CalendarListItem = React.memo((props: CalendarListItemProps) => {
 
   if (!visible) {
     return (
-      <Text style={textStyle} />
+      <Text />
     );
   }
 

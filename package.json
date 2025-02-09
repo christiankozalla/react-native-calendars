@@ -3,7 +3,7 @@
   "version": "1.22.0",
   "main": "src/index.ts",
   "types": "src/index.d.ts",
-  "description": "React Native Calendar Components",
+  "description": "Fork of React Native Calendar Components",
   "scripts": {
     "build": "xcodebuild -project ios/CalendarsExample.xcodeproj build",
     "build:ts": "tsc --project ./tsconfig.json",
@@ -32,6 +32,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "author": "Wix.com",
+  "maintainers": [
+    {
+      "name": "Christian Kozalla",
+      "email": "christian.kozalla@gmail.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "hoist-non-react-statics": "^3.3.1",

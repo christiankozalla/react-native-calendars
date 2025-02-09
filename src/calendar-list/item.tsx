@@ -83,7 +83,7 @@ const CalendarListItem = React.memo((props: CalendarListItemProps) => {
 
   if (!visible) {
     return (
-      <Text style={textStyle}>{dateString}</Text>
+      <Text style={textStyle} />
     );
   }
 

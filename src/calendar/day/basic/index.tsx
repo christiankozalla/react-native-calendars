@@ -1,7 +1,7 @@
 import React, {Fragment, useCallback, useRef} from 'react';
 import {TouchableOpacity, Text, View, ViewProps} from 'react-native';
 import {xdateToData} from '../../../interface';
-import {Theme, DayState, MarkingTypes, DateData} from '../../../types';
+import {Theme, DayState, MarkingTypes, DateData, RenderPeriod} from '../../../types';
 import Marking, {MarkingProps} from '../marking';
 import styleConstructor from './style';
 
@@ -29,6 +29,8 @@ export interface BasicDayProps extends ViewProps {
   accessibilityLabel?: string;
   /** Test ID */
   testID?: string;
+  /** renderPeriod allows user to pass a custom function for rendering periods */
+  renderPeriod?: RenderPeriod;
 }
 
 const BasicDay = (props: BasicDayProps) => {
@@ -39,6 +41,7 @@ const BasicDay = (props: BasicDayProps) => {
     onLongPress,
     markingType,
     marking,
+    renderPeriod,
     state,
     disableAllTouchEventsForDisabledDays,
     disableAllTouchEventsForInactiveDays,
@@ -144,6 +147,7 @@ const BasicDay = (props: BasicDayProps) => {
         dotColor={dotColor}
         dots={dots}
         periods={periods}
+        renderPeriod={renderPeriod}
       />
     );
   };

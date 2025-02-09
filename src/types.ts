@@ -1,4 +1,4 @@
-import {ViewStyle, TextStyle} from 'react-native';
+import {StyleProp, ViewStyle, TextStyle} from 'react-native';
 import {MarkingProps} from './calendar/day/marking';
 import {CalendarContextProps} from './expandableCalendar/Context';
 
@@ -9,6 +9,13 @@ export type MarkingTypes = 'dot' | 'multi-dot' | 'period' | 'multi-period' | 'cu
 export type MarkedDates = {
   [key: string]: MarkingProps;
 };
+export type PERIOD = {
+  color: string;
+  startingDay?: boolean;
+  endingDay?: boolean;
+  text?: string;
+};
+export type RenderPeriod = (period: PERIOD, styles: StyleProp<ViewStyle>[]) => React.JSX.Element | null;
 export type DayState = 'selected' | 'disabled' | 'inactive' | 'today' | '';
 export type Direction = 'left' | 'right';
 export type DateData = {

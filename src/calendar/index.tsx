@@ -10,7 +10,7 @@ import {page, isGTE, isLTE, sameMonth} from '../dateutils';
 import {xdateToData, parseDate, toMarkingFormat} from '../interface';
 import {getState} from '../day-state-manager';
 import {extractHeaderProps, extractDayProps} from '../componentUpdater';
-import {DateData, Theme, MarkedDates, ContextProp} from '../types';
+import {DateData, Theme, MarkedDates, ContextProp, RenderPeriod} from '../types';
 import {useDidUpdate} from '../hooks';
 import styleConstructor from './style';
 import CalendarHeader, {CalendarHeaderProps} from './header';
@@ -60,6 +60,8 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
   disabledByWeekDays?: number[]
   /** Test ID */
   testID?: string;
+  /** renderPeriod for passing a custom function for rendering a period marking */
+  renderPeriod?: RenderPeriod;
 }
 
 /**

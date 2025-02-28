@@ -116,7 +116,8 @@ export function extractHeaderProps(props: CalendarProps) {
     numberOfDays,
     current,
     timelineLeftInset,
-    testID
+    testID,
+    onHeaderLayout
   } = props;
 
   const headerProps = {
@@ -141,7 +142,8 @@ export function extractHeaderProps(props: CalendarProps) {
     numberOfDays,
     current,
     timelineLeftInset,
-    testID
+    testID,
+    onHeaderLayout
   };
 
   return headerProps;
@@ -236,7 +238,7 @@ export function extractReservationListProps(props: AgendaProps) {
     rowHasChanged,
     renderDay,
     renderItem,
-    renderEmptyDate,
+    renderEmptyDate
   } = props;
 
   const ReservationListProps = {
@@ -263,7 +265,7 @@ export function extractReservationListProps(props: AgendaProps) {
     rowHasChanged,
     renderDay,
     renderItem,
-    renderEmptyDate,
+    renderEmptyDate
   };
 
   return ReservationListProps;

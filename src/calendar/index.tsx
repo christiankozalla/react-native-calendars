@@ -57,7 +57,7 @@ export interface CalendarProps extends CalendarHeaderProps, DayProps {
   /** Disable days by default */
   disabledByDefault?: boolean;
   /** Disable dates by days of the week (Sunday=0) */
-  disabledByWeekDays?: number[]
+  disabledByWeekDays?: number[];
   /** Test ID */
   testID?: string;
   /** renderPeriod for passing a custom function for rendering a period marking */
@@ -280,7 +280,7 @@ const Calendar = (props: CalendarProps & ContextProp) => {
   const gestureProps = enableSwipeMonths ? swipeProps : undefined;
 
   return (
-    <GestureComponent {...gestureProps}>
+    <GestureComponent {...gestureProps} testID={`${testID}.container`}>
       <View
         style={[style.current.container, propsStyle]}
         testID={testID}

@@ -54,6 +54,7 @@ const PAN_GESTURE_THRESHOLD = 30;
 const LEFT_ARROW = require('../calendar/img/previous.png');
 const RIGHT_ARROW = require('../calendar/img/next.png');
 const knobHitSlop = {left: 10, right: 10, top: 10, bottom: 10};
+const DEFAULT_HEADER_HEIGHT = 78;
 
 export interface ExpandableCalendarProps extends CalendarListProps {
   /** the initial position of the calendar ('open' or 'closed') */
@@ -143,7 +144,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
   const [screenReaderEnabled, setScreenReaderEnabled] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const onHeaderLayout = useCallback(({nativeEvent: {layout: {height}}}: LayoutChangeEvent) => {
-      setHeaderHeight(height);
+      setHeaderHeight(height || DEFAULT_HEADER_HEIGHT);
   }, []);
 
   /** Date */
@@ -190,15 +191,16 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
 
   const [position, setPosition] = useState(numberOfDays ? Positions.CLOSED : initialPosition);
   const isOpen = position === Positions.OPEN;
-  const getOpenHeight = () => {
+  const getOpenHeight = useCallback(() => {
     if (!horizontal) {
       return Math.max(constants.screenHeight, constants.screenWidth);
     }
     return headerHeight + (WEEK_HEIGHT * (numberOfWeeks.current)) + (hideKnob ? 0 : KNOB_CONTAINER_HEIGHT);
-  };
+  }, [headerHeight, horizontal, hideKnob, numberOfWeeks]);
+
   const openHeight = useRef(getOpenHeight());
   const closedHeight = useMemo(() => headerHeight + WEEK_HEIGHT + (hideKnob || Number(numberOfDays) > 1 ? 0 : KNOB_CONTAINER_HEIGHT), [numberOfDays, hideKnob, headerHeight]);
-  const startHeight = useMemo(() => isOpen ? openHeight.current : closedHeight, [closedHeight, isOpen]);
+  const startHeight = useMemo(() => isOpen ? getOpenHeight() : closedHeight, [closedHeight, isOpen, getOpenHeight]);
   const _height = useRef(startHeight);
   const deltaY = useMemo(() => new Animated.Value(startHeight), [startHeight]);
   const headerDeltaY = useRef(new Animated.Value(isOpen ? -headerHeight : 0));
@@ -206,6 +208,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
   useEffect(() => {
     _height.current = startHeight;
     deltaY.setValue(startHeight);
+    _wrapperStyles.current.style.height = startHeight;
   }, [startHeight]);
 
   useEffect(() => {
@@ -397,27 +400,25 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
   /** Animated */
 
   const bounceToPosition = (toValue = 0) => {
-    if (!disablePan) {
-      const threshold = isOpen ? openHeight.current - closeThreshold : closedHeight + openThreshold;
-      let _isOpen = _height.current >= threshold;
-      const newValue = _isOpen ? openHeight.current : closedHeight;
+    const threshold = isOpen ? openHeight.current - closeThreshold : closedHeight + openThreshold;
+    let _isOpen = _height.current >= threshold;
+    const newValue = _isOpen ? openHeight.current : closedHeight;
 
-      deltaY.setValue(_height.current); // set the start position for the animated value
-      _height.current = toValue || newValue;
-      _isOpen = _height.current >= threshold; // re-check after _height.current was set
+    deltaY.setValue(_height.current); // set the start position for the animated value
+    _height.current = toValue || newValue;
+    _isOpen = _height.current >= threshold; // re-check after _height.current was set
 
-      resetWeekCalendarOpacity(_isOpen);
-      Animated.spring(deltaY, {
-        toValue: _height.current,
-        speed: SPEED,
-        bounciness: BOUNCINESS,
-        useNativeDriver: false
-      }).start(() => {
-        onCalendarToggled?.(_isOpen);
-        setPosition(() => _height.current === closedHeight ? Positions.CLOSED : Positions.OPEN);
-      });
-      toggleAnimatedHeader(_isOpen);
-    }
+    resetWeekCalendarOpacity(_isOpen);
+    Animated.spring(deltaY, {
+      toValue: _height.current,
+      speed: SPEED,
+      bounciness: BOUNCINESS,
+      useNativeDriver: false
+    }).start(() => {
+      onCalendarToggled?.(_isOpen);
+      setPosition(() => _height.current === closedHeight ? Positions.CLOSED : Positions.OPEN);
+    });
+    toggleAnimatedHeader(_isOpen);
   };
 
   const resetWeekCalendarOpacity = async (isOpen: boolean) => {
@@ -475,7 +476,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
     if (numberOfDaysCondition) {
       setDate?.(value.dateString, UpdateSources.DAY_PRESS);
     }
-    if (closeOnDayPress) {
+    if (closeOnDayPress && !disablePan) {
       closeCalendar();
     }
     onDayPress?.(value);
@@ -632,6 +633,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
           testID={`${testID}.calendarAccessible`}
           {...others}
           theme={themeObject}
+          onHeaderLayout={onHeaderLayout}
           onDayPress={_onDayPress}
           hideExtraDays
           renderArrow={_renderArrow}

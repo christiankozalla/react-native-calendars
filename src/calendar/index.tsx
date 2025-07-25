@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import XDate from 'xdate';
 import isEmpty from 'lodash/isEmpty';
 import React, {useRef, useState, useEffect, useCallback, useMemo} from 'react';
-import {View, ViewStyle, StyleProp} from 'react-native';
+import {AccessibilityInfo, View, ViewStyle, StyleProp} from 'react-native';
 // @ts-expect-error
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import constants from '../commons/constants';
@@ -110,6 +110,7 @@ const Calendar = (props: CalendarProps & ContextProp) => {
     const _currentMonth = currentMonth.clone();
     onMonthChange?.(xdateToData(_currentMonth));
     onVisibleMonthsChange?.([xdateToData(_currentMonth)]);
+    AccessibilityInfo.announceForAccessibility(_currentMonth.toString('MMMM yyyy'));
   }, [currentMonth]);
 
   const updateMonth = useCallback((newMonth: XDate) => {

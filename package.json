@@ -22,7 +22,8 @@
     "xcode": "open ios/CalendarsExample.xcworkspace/",
     "clean": "rm yarn-lock && rm -rf ./node_modules && yarn",
     "pod-install": "pod install --project-directory=ios",
-    "prepare": "npm run build:ts"
+    "prepare": "npm run build:ts",
+    "prepack": "npm run build:ts"
   },
   "repository": {
     "type": "git",
